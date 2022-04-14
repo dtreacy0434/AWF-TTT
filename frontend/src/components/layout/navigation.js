@@ -1,37 +1,23 @@
-import styled from 'styled-components';
-import { Button, ButtonToolbar, ButtonGroup } from 'react-bootstrap';
+import { Navbar, Container, Nav } from 'react-bootstrap';
+import logo from "../../images/logo.png";
 
 const Navigation = () => {
     return (
-        <StyledNavigation>
-            <StyledNav>
-                <ButtonToolbar>
-                    <ButtonGroup>
-                        <Button href="/" variant="secondary" size="lg">Home</Button>
-                        <Button href="/games" variant="secondary" size="lg">Games</Button>
-                        <Button href="/places" variant="secondary" size="lg">Places</Button>
-                        <Button href="/schedule" variant="secondary" size="lg">Schedule</Button>
-                    </ButtonGroup>
-
-                    <ButtonGroup>
-                        <Button href="/profile" variant="secondary" size="lg">Profile</Button>
-                    </ButtonGroup>
-                </ButtonToolbar>
-            </StyledNav>
-        </StyledNavigation>
+        <Navbar bg="light" fixed="top">
+            <Container>
+            <Navbar.Brand href="/"><img src={logo} alt="Logo"/> Tabletop</Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="me-auto">
+                    <Nav.Link href="/games">Games</Nav.Link>
+                    <Nav.Link href="/places">Places</Nav.Link>
+                    <Nav.Link href="/schedule">Schedule</Nav.Link>
+                    <Nav.Link href="/profile">Profile</Nav.Link>
+                </Nav>
+                </Navbar.Collapse>
+            </Container>
+        </Navbar>
     )
 }
-
-const StyledNavigation = styled.div`
-    display: block;
-    text-align: center;
-    padding-left: 1rem;
-    padding-right: 1rem;
-`;
-
-const StyledNav = styled.nav`
-    border-bottom: solid 1px;
-    padding-bottom: 1rem;
-`;
 
 export default Navigation;
