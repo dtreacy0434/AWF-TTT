@@ -1,4 +1,5 @@
 from django.db import models
+import uuid
 
 # Represents the game pieces
 # Example 
@@ -35,6 +36,7 @@ class User(models.Model):
 # players = TableTopPlayer, 2ndPlayer, etc
 # game = Settler of Catan
 class GameEvent(models.Model):
+    id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     game_date = models.DateField()
     game_time = models.TimeField()
     players = models.ManyToManyField(User)
