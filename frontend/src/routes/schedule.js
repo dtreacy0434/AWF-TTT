@@ -1,47 +1,47 @@
-import Navigation from "../components/layout/navigation"
+import Navigation from "../components/layout/Navigation"
 import styled from 'styled-components';
 import { useState } from "react";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Card, ListGroup } from "react-bootstrap";
-import { compareAsc, format } from "date-fns";
+import { format } from "date-fns";
 
-const StyledDatePickerContainer = styled.div`
-  padding: 20px;
-  border-style: solid;
+// /api/gameEvent/user/params={month, year}
+// GET - return list of planned game nights for user
+// + games that will be played for that month & year
+
+const StyledDiv = styled.div`
+  border-style: dotted;
   border-width: 1px;
-  width: max-content;
+  border-color: #05204A;
 `;
 
 const StyledContainer = styled.div`
+  display: flex;
   padding: 20px;
+  background-color: #E1E2EF;
+  justify-content: space-evenly;
+`;
+
+const StyledDatePickContainer = styled.div`
+  display: flex;
+  padding-top: 50px;
+  padding-left: 50px;
+  background-color: #E1E2EF;
 `;
 
 const StyledContainerChild = styled.div`
-  width: 25%;
-  float: left;
-  padding: 20px;
-  margin-right: 100px;
+  padding: 30px;
 `;
 
 function HandleChange(date, savedDates, setDates) {
-
-  savedDates.map((x) => {
-    if (compareAsc(x, date)) {
-      console.log(compareAsc(x, date));
-    }
-  })
+  let setUpMeeting = false;
 
   // Popup thing asking user if they want to set up a
   // meeting for the selected date.. if yes:
-
-  let setUpMeeting = true;
+  setUpMeeting = true;
 
   if(setUpMeeting) {
-    // Check if date already in
-    
-
-    // If date doesnt already exist:
     // Sort Dates to make sure earliest are first
     // Save the Date
     const sortedDates = savedDates.concat(date).sort((a, b) => a - b)
@@ -54,19 +54,18 @@ export default function Schedule() {
   const [savedDates, setDates] = useState([]);
 
   return (
-    <div>
+    <StyledDiv>
       <Navigation/>
-      <br></br>
 
-      <StyledDatePickerContainer>
+      <StyledDatePickContainer>
         <ReactDatePicker
-          selected={gameDate}
-          onChange={(date) => HandleChange(date, savedDates, setDates, setDate(date))}
-          withPortal
-          portalId="root-portal"
-          showTimeSelect
-        />
-      </StyledDatePickerContainer>
+            selected={gameDate}
+            onChange={(date) => HandleChange(date, savedDates, setDates, setDate(date))}
+            withPortal
+            portalId="root-portal"
+            showTimeSelect
+          />
+      </StyledDatePickContainer>
 
       <StyledContainer>
         <StyledContainerChild>
@@ -87,9 +86,12 @@ export default function Schedule() {
         </StyledContainerChild>
 
         <StyledContainerChild>
-          <Card style={{ width: '40rem', marginLeft: '3rem'}}>
+          <Card style={{ width: '40rem'}}>
             <Card.Header>In the Future</Card.Header>
             <ListGroup variant="flush">
+              {
+                savedDates.length === 0 && <ListGroup.Item>Nothing Upcoming!</ListGroup.Item> 
+              }
               {savedDates.map((x, index) => 
                 <ListGroup.Item key={index}>{format(x, 'MMMM dd, yyyy - h:mm aaa')}</ListGroup.Item>
               )}
@@ -97,6 +99,6 @@ export default function Schedule() {
           </Card>
         </StyledContainerChild>
       </StyledContainer>
-    </div>
+    </StyledDiv>
   )
 }

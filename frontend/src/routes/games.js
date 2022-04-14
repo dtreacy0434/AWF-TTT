@@ -1,14 +1,21 @@
-import Navigation from "../components/layout/navigation"
-import GameCard from "../components/gamecard"
+import Navigation from "../components/layout/Navigation"
+import GameCard from "../components/Gamecard"
 import styled from 'styled-components';
+import placeholder from '../images/placeholder.png';
+
+// /api/game/stats/
+// GET - return list of stats for all games
+// (how many users own this game)
+// (how many times a game has been played)
 
 const StyledContainer = styled.div`
   padding: 20px;
-`;
+  background-color: #E1E2EF;
+  `;
 
 const StyledContainerChild = styled.div`
-  width: 25%;
-  float: left;
+  display: flex;
+  flex-wrap: wrap;
   padding: 20px;
   margin-right: 100px;
 `;
@@ -19,16 +26,15 @@ export default function Games() {
         <Navigation />
         <StyledContainer>
           <StyledContainerChild>
-            <GameCard/>
-          </StyledContainerChild>
-          <StyledContainerChild>
-            <GameCard/>
-          </StyledContainerChild>
-          <StyledContainerChild>
-            <GameCard/>
-          </StyledContainerChild>
-          <StyledContainerChild>
-            <GameCard/>
+            <GameCard
+              image={placeholder}
+              gameTitle={"Title"}
+              gameDesc={"Description"}
+              gamePieces={"Pieces"}
+              width={'20rem'}
+              numOwners={'5'}
+              timesPlayed={'2'}
+            />
           </StyledContainerChild>
         </StyledContainer>
       </div>

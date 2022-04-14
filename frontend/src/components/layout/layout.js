@@ -1,5 +1,5 @@
 import React from "react";
-import Footer from "./footer";
+import Footer from "./Footer";
 import styled from 'styled-components';
 
 class Layout extends React.Component {
