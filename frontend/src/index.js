@@ -7,12 +7,12 @@ import {
   Route,
 } from "react-router-dom";
 
-import Layout from "./components/layout/layout";
-import Home from "./routes/home";
-import Games from './routes/games';
-import Places from './routes/places';
-import Schedule from './routes/schedule';
-import Profile from './routes/profile';
+import Layout from "./components/layout/Layout";
+import Home from "./routes/Home";
+import Games from './routes/Games';
+import Places from './routes/Places';
+import Schedule from './routes/Schedule';
+import Profile from './routes/Profile';
 
 
 ReactDOM.render(

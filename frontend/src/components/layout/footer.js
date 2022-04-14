@@ -12,12 +12,11 @@ class Footer extends React.Component {
 };
 
 const StyledFooter = styled.div`
-    border-top: solid 1px;
     padding-top: 1rem;
     text-align: center;
     position: absolute;
     left: 0;
-    bottom: 0;
+    bottom: 2rem;
     right: 0;
 `;
 

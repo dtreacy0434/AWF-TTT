@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // POST - add to list of all games & pieces
 // PUT - update name / game pieces of game in list
 
-const GameCard = ({ image, gameTitle, gameDesc, gamePieces, numOwners, width, timesPlayed }) => (
+const CollectionCard = ({ image, gameTitle, gameDesc, gamePieces, numOwners, width, timesPlayed }) => (
     <Card className="text-center" style={{ width: width, padding: '5px', marginRight: '1rem' }}>
         <Card.Img variant="top" src={image}/>
         <Card.Header><Card.Title>{gameTitle}</Card.Title></Card.Header>
@@ -23,11 +23,11 @@ const GameCard = ({ image, gameTitle, gameDesc, gamePieces, numOwners, width, ti
             </Card.Text>
         </Card.Body>
         <div className="btn-group" role="group">
-            <Button type="button" className="btn btn-outline-light btn-secondary">Add to Collection</Button>
+            <Button type="button" className="btn btn-outline-light btn-secondary">Remove from Collection</Button>
             <Button type="button" className="btn btn-outline-light btn-secondary">Update</Button>
         </div>
         <Card.Footer>Number of people that own this: {numOwners}</Card.Footer>
     </Card>
 )
 
-export default GameCard;
+export default CollectionCard;
