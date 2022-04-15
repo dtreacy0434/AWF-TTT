@@ -18,7 +18,7 @@ class GameObject(models.Model):
 # times_played (This will be used for the stats API)
 class Game(models.Model):
     name = models.CharField(max_length=30)
-    game_objects = models.ManyToManyField(GameObject)
+    game_objects = models.ManyToManyField(GameObject, blank=True)
     times_played = models.PositiveIntegerField() 
 
 # Represents the User
@@ -27,7 +27,11 @@ class Game(models.Model):
 # game_list = Settlers of Catan, MouseTrap, etc
 class User(models.Model):
     username = models.CharField(max_length=30)
-    game_list = models.ManyToManyField(Game)
+    game_list = models.ManyToManyField(Game, blank=True)
+
+    def __str__(self):
+        return self.username
+    
 
 # Represents the Game Night
 # Example 
@@ -41,3 +45,6 @@ class GameEvent(models.Model):
     game_time = models.TimeField()
     players = models.ManyToManyField(User)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.game_date} - {self.game} - {self.id}"
