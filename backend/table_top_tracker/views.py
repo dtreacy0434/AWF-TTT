@@ -60,20 +60,19 @@ class all_game_event(View):
 # single game event by event id
 class game_event(View):
     def get(self, request):
-        if request.method == 'GET':
-            gameEvents = GameEvent.objects
-            gameEvent = gameEvents.filter(id=request.event_id)
-            name = gameEvent.game.name
-            date = gameEvent.game_date
-            time = gameEvent.game_time
-            players = gameEvent.players
-            context = {
-                'name' : name,
-                'date' : date,
-                'time' : time,
-                'players' : players
-            }
-            return render(request, 'gameEvent/{}/gameEvent_info.html'.format(request.event_id), context) # temporary html file name
+        gameEvents = GameEvent.objects
+        gameEvent = gameEvents.filter(id=request.event_id)
+        name = gameEvent.game.name
+        date = gameEvent.game_date
+        time = gameEvent.game_time
+        players = gameEvent.players
+        context = {
+            'name' : name,
+            'date' : date,
+            'time' : time,
+            'players' : players
+        }
+        return render(request, 'gameEvent/{}/gameEvent_info.html'.format(request.event_id), context) # temporary html file name
 
 class game_data(View):
     def get(self, request):
@@ -82,21 +81,19 @@ class game_data(View):
 class user_game_data(View):
 # @login_required
     def get(self, request):
-        if request.method == 'GET':
-            gameData = request.user.game_list  
-            names = gameData.name.all()
-            game_objects = gameData.game_objects.all()
-            times_played = gameData.times_played.all()
-            context={
-                'names' : names,
-                'game_objects' : game_objects,
-                'times_played' : times_played
-            }
-            return render(request, 'user/{}/game'.format(request.user.id), context)
+        gameData = request.user.game_list  
+        names = gameData.name.all()
+        game_objects = gameData.game_objects.all()
+        times_played = gameData.times_played.all()
+        context={
+            'names' : names,
+            'game_objects' : game_objects,
+            'times_played' : times_played
+        }
+        return render(request, 'user/{}/game'.format(request.user.id), context)
 
     def post(self, request):
-        if request.method == 'POST':
-            user = request.user
+        user = request.user
 #            user.game_list.add()
 
 class game_game_objects(View):
@@ -113,7 +110,7 @@ class game_game_objects(View):
         }
         return render(request, 'game/{}/gameObjects/gameObject.html'.format(request.game_id), context)
 
-# game event by game id
+# single game event by game id
 class game_game_event(View):
     def get(self, request):
         gameEvents = GameEvent.objects
