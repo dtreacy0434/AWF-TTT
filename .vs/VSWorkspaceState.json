@@ -4,8 +4,9 @@
     "\\backend",
     "\\backend\\backend",
     "\\backend\\table_top_tracker",
+    "\\backend\\table_top_tracker\\migrations",
     "\\frontend"
   ],
-  "SelectedNode": "\\backend\\table_top_tracker\\models.py",
+  "SelectedNode": "\\backend\\table_top_tracker\\views.py",
   "PreviewInSolutionExplorer": false
 }

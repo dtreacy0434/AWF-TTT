@@ -12,5 +12,4 @@ urlpatterns = [
     path('gameEvent/<uuid:game_event_id>/', views.game_event.as_view()),
     path('game/<int:game_id>/stats/', views.game_stats.as_view()),
     path('user/<int:user_id>/game/<int:game_id>/stats/', views.user_stats.as_view())
-
 ]
