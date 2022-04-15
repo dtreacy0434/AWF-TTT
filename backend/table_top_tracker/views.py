@@ -1,6 +1,10 @@
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views.generic import TemplateView
 from .models import GameObject, Game, User, GameEvent
 
 
@@ -18,6 +22,7 @@ class all_games(View):
             'names' : names
         }
         return render(request, "game/game_list.html", context)  # temporary html file name I set
+        #return HttpResponseRedirect('')
 
 class all_users(View):
     def get(self, request):
@@ -78,8 +83,8 @@ class game_data(View):
     def get(self, request):
         pass
 
-class user_game_data(View):
-# @login_required
+class user_game_data(TemplateView):
+    # @method_decorator(login_required)
     def get(self, request):
         gameData = request.user.game_list  
         names = gameData.name.all()
@@ -96,6 +101,9 @@ class user_game_data(View):
         user = request.user
 #            user.game_list.add()
 
+    def delete(self, request):
+        pass
+
 class game_game_objects(View):
     def get(self, request):
         gameObjects = GameObject.objects
@@ -109,6 +117,9 @@ class game_game_objects(View):
             'quantity' : quantity
         }
         return render(request, 'game/{}/gameObjects/gameObject.html'.format(request.game_id), context)
+
+    def post(self, request):
+        pass
 
 # single game event by game id
 class game_game_event(View):
@@ -127,13 +138,27 @@ class game_game_event(View):
         }
         return render(request, 'gameEvent/{}/gameEvent_info.html'.format(request.game_id), context) # temporary html file name
 
+# game events of user
+class user_game_event(TemplateView):
+# @method_decorator(login_required)
+    def get(self, request):
+       pass
+
+    def post(self, request):
+        pass
+
+    def delete(self, request):
+        pass
+
+    def put(self, request):
+        pass
 
 class game_stats(View):
     def get(self, request):
         pass 
 
-class user_stats(View):
-# @login_required
+class user_stats(TemplateView):
+    # @method_decorator(login_required)
     def get(self, request):
         user = User.objects.filter(id=request.user_id)
         name = user.name
