@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
-
+from .models import GameObject, Game, User, GameEvent
 
 
 def index(request):
@@ -28,6 +28,8 @@ class game_data(View):
 
 class user_game_data(View):
     def get(self, request):
+        games = request.user_game_data
+
         pass
 
 class game_game_objects(View):

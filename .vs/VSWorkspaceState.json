@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\backend",
+    "\\backend\\backend",
+    "\\backend\\table_top_tracker",
+    "\\frontend"
+  ],
+  "SelectedNode": "\\backend\\table_top_tracker\\models.py",
+  "PreviewInSolutionExplorer": false
+}
