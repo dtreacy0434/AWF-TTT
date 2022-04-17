@@ -54,7 +54,12 @@ class all_users(View):
         users = User.objects.all()
         user_list = []
         for u in users:
-            user_list.append(u.username)
+            u_o = {
+                "id" : u.id,
+                "username" : u.username
+            }
+
+            user_list.append(u_o)
 
         context = {
             'users' : user_list
@@ -75,7 +80,11 @@ class all_game_objects(View):
         gameObjects = GameObject.objects.all()
         gameobjects_list = []
         for gameobject in gameObjects:
-            gameobjects_list.append(gameobject.name)
+            g_o_o = {
+                "id" : gameobject.id,
+                "name" : gameobject.name
+            }
+            gameobjects_list.append(g_o_o)
 
         context = {
             'game_objects' : gameobjects_list
@@ -85,17 +94,27 @@ class all_game_objects(View):
 class all_game_event(View):
     def get(self, request):
         gameEvents =  GameEvent.objects.all()
-        gameEvents = list(gameEvents)
+        gameevents_list = []
         for gameEvent in gameEvents:
-            gameEvent['game'] = Game.objects.get(id=gameEvent['game']).name
-        return JsonResponse(gameEvents, content_type="application/json", safe=False)
+            g_e = {
+                "id" : gameEvent.id,
+                "game_data" : gameEvent.game_date,
+                "players" : gameEvent.players.count()
+            }
+            gameevents_list.append(g_e)
+
+            context = {
+                "game_events" : gameevents_list
+            }
+            
+        return JsonResponse(context, content_type="application/json")
 
 # single game event by event id
 class game_event(View):
     def get(self, request, *args, **kwargs):
         gameEvent = GameEvent.objects.get(id=kwargs['game_event_id'])
         print(gameEvent)
-        return JsonResponse(gameEvent, content_type="application/json", safe=False)
+        return JsonResponse(gameEvent, content_type="application/json")
 
 class game_data(View):
     def get(self, request, *args, **kwargs):
@@ -110,7 +129,7 @@ class game_data(View):
             "game_objects" : game_objects
         }
         
-        return JsonResponse(context, content_type="application/json", safe=False)
+        return JsonResponse(context, content_type="application/json")
 
 #This will show all the games the user has
 class user_game_data(View):
@@ -124,7 +143,7 @@ class user_game_data(View):
             'username' : user.username,
             'games' : games
         }
-        return JsonResponse(context, content_type="application/json", safe=False)
+        return JsonResponse(context, content_type="application/json")
 
     def post(self, request):
         user = request.user
@@ -148,7 +167,7 @@ class game_game_objects(View):
             'game_name' : game.name,
             'game_objects' : game_objects_info,
         }
-        return JsonResponse(context, content_type="application/json", safe=False)
+        return JsonResponse(context, content_type="application/json")
 
     def post(self, request):
         pass
@@ -166,7 +185,7 @@ class game_event(View):
             'time' : gameEvents.game_time,
             'players' : players
         }
-        return JsonResponse(context, content_type="application/json", safe=False)
+        return JsonResponse(context, content_type="application/json")
 
 # game events of user
 class user_game_event(TemplateView):
@@ -184,8 +203,19 @@ class user_game_event(TemplateView):
         pass
 
 class game_stats(View):
-    def get(self, request):
-        pass 
+    def get(self, request, *args, **kwargs):
+        game = Game.objects.get(id=kwargs['game_id'])
+        times_hosted = GameEvent.objects.filter(game=game).count()
+
+        context = {
+            'name' : game.name,
+            'num_of_objects' : game.game_objects.count(),
+            'times_played' : game.times_played,
+            'times_hosted' : times_hosted 
+        }
+        
+        return JsonResponse(context, content_type="application/json")
+
 
 class user_stats(TemplateView):
     # @method_decorator(login_required)
@@ -196,8 +226,9 @@ class user_stats(TemplateView):
         games_counter = user.game_list.all().count()
 
         context = {
+            'username' : user.username,
             'num_of_games' : games_counter,
             'games_attended' : games_attended
         }
 
-        return JsonResponse(context, content_type="application/json", safe=False)
+        return JsonResponse(context, content_type="application/json")
