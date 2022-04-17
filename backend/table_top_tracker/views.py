@@ -1,11 +1,15 @@
-from django.http import HttpResponse
+from telnetlib import STATUS
+from django.http import HttpResponse, JsonResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
+from django.core import serializers
+import json
 from .models import GameObject, Game, User, GameEvent
+
 
 
 def index(request):
@@ -13,89 +17,114 @@ def index(request):
 
 def api_index(request):
     return HttpResponse("TTT API")
-
+#This will display the names of all the games in the database
+#Passed the id and name [id needed if you want to then access that game specfically]
 class all_games(View):
     def get(self, request):
-        games = Game.objects
-        names = games.name.all()
+        games = Game.objects.all()
+        game_list = []
+        for game in games:
+            g_o = {
+                "id" : game.id,
+                "name" : game.name
+            }
+            game_list.append(g_o)
+            
         context = {
-            'names' : names
+            'games' : game_list
         }
-        return render(request, "game/game_list.html", context)  # temporary html file name I set
-        #return HttpResponseRedirect('')
 
+        return JsonResponse(context, content_type="application/json")
+    
+    #add a new game to the list, will require the ids of any gameobject if they have any
+    def post(self, request):
+        r = json.loads(request.body.decode())
+        if r['game_object_id']:
+            game_object = GameObject.objects.get(id=r['game_object_id'])
+            Game.objects.create(name=r['name'], game_objects=game_object, times_played=0)
+        else:
+            Game.objects.create(name=r['name'], times_played=0)
+        
+        return JsonResponse(status=201)
+    
+
+#This will display the name of all the players in the database
 class all_users(View):
     def get(self, request):
-        users = User.objects#.order_by('name')
-        names = users.name.all()
-        context = {
-            'names' : names
-        }
-        return render(request, "user/user_list.html", context)  # temporary html file name I set
+        users = User.objects.all()
+        user_list = []
+        for u in users:
+            user_list.append(u.username)
 
+        context = {
+            'users' : user_list
+        }
+
+        return JsonResponse(context, content_type="application/json")
+
+    #create a new user
+    def post(self, request):
+        r = json.loads(request.body.decode())
+        User.objects.create(username =r['username'])
+
+        return JsonResponse(status=201)
+
+#This will display the name of all the game objects in the database
 class all_game_objects(View):
     def get(self, request):
-        gameObjects = GameObject.objects
-        names = gameObjects.name.all()
-        descriptions = gameObject.description.all()
-        quantities = gameObject.quantity.all()
+        gameObjects = GameObject.objects.all()
+        gameobjects_list = []
+        for gameobject in gameObjects:
+            gameobjects_list.append(gameobject.name)
+
         context = {
-            'names' : names,
-            'descriptions' : descriptions,
-            'quantities' : quantities
+            'game_objects' : gameobjects_list
         }
-        return render(request, "gameObjects/gameObject_list.html", context)  # temporary html file name I set
+        return JsonResponse(context, content_type="application/json")
 
 class all_game_event(View):
     def get(self, request):
-        gameEvents = GameEvent.objects#.order_by('date')
-        dates = gameEvents.game_date.all()
-        times = gameEvents.game_time.all()
-        players = gameEvents.players.all()
-        games = gameEvents.game.all()
-        names = games.name.all()
-        context = {
-            'names' : names,
-            'dates' : dates,
-            'times' : times,
-            'players' : players
-        }
-        return render(request, "gameEvent/gameEvent_list.html", context) # temporary html file name
+        gameEvents =  GameEvent.objects.all()
+        gameEvents = list(gameEvents)
+        for gameEvent in gameEvents:
+            gameEvent['game'] = Game.objects.get(id=gameEvent['game']).name
+        return JsonResponse(gameEvents, content_type="application/json", safe=False)
 
 # single game event by event id
 class game_event(View):
-    def get(self, request):
-        gameEvents = GameEvent.objects
-        gameEvent = gameEvents.filter(id=request.event_id)
-        name = gameEvent.game.name
-        date = gameEvent.game_date
-        time = gameEvent.game_time
-        players = gameEvent.players
-        context = {
-            'name' : name,
-            'date' : date,
-            'time' : time,
-            'players' : players
-        }
-        return render(request, 'gameEvent/{}/gameEvent_info.html'.format(request.event_id), context) # temporary html file name
+    def get(self, request, *args, **kwargs):
+        gameEvent = GameEvent.objects.get(id=kwargs['game_event_id'])
+        print(gameEvent)
+        return JsonResponse(gameEvent, content_type="application/json", safe=False)
 
 class game_data(View):
-    def get(self, request):
-        pass
-
-class user_game_data(TemplateView):
-    # @method_decorator(login_required)
-    def get(self, request):
-        gameData = request.user.game_list  
-        names = gameData.name.all()
-        game_objects = gameData.game_objects.all()
-        times_played = gameData.times_played.all()
-        context={
-            'names' : names,
-            'game_objects' : game_objects,
-            'times_played' : times_played
+    def get(self, request, *args, **kwargs):
+        game = Game.objects.get(id=kwargs["game_id"])
+        game_objects = []
+        for obj in game.game_objects.all():
+            game_objects.append(obj.name)
+        
+        context = {
+            "name" : game.name,
+            "times_played" : game.times_played,
+            "game_objects" : game_objects
         }
-        return render(request, 'user/{}/game'.format(request.user.id), context)
+        
+        return JsonResponse(context, content_type="application/json", safe=False)
+
+#This will show all the games the user has
+class user_game_data(View):
+    # @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+        user = User.objects.get(id=kwargs['user_id'])
+        games = []
+        for obj in user.game_list.all():
+            games.append(obj.name)
+        context={
+            'username' : user.username,
+            'games' : games
+        }
+        return JsonResponse(context, content_type="application/json", safe=False)
 
     def post(self, request):
         user = request.user
@@ -105,38 +134,39 @@ class user_game_data(TemplateView):
         pass
 
 class game_game_objects(View):
-    def get(self, request):
-        gameObjects = GameObject.objects
-        gameObject = gameObjects.filter(id=request.game_id)
-        name = gameObject.name
-        description = gameObject.description
-        quantity = gameObject.quantity
+    def get(self, request, *args, **kwargs):
+        game = Game.objects.get(id=kwargs['game_id'])
+        game_objects_info = []
+        for obj in game.game_objects.all():
+            g_o = {}
+            g_o['name'] = obj.name
+            g_o['description'] = obj.description
+            g_o['quantity'] = obj.quantity
+            game_objects_info.append(g_o)
+
         context = {
-            'name' : name,
-            'description' : description,
-            'quantity' : quantity
+            'game_name' : game.name,
+            'game_objects' : game_objects_info,
         }
-        return render(request, 'game/{}/gameObjects/gameObject.html'.format(request.game_id), context)
+        return JsonResponse(context, content_type="application/json", safe=False)
 
     def post(self, request):
         pass
 
 # single game event by game id
-class game_game_event(View):
-    def get(self, request):
-        gameEvents = GameEvent.objects
-        gameEvent = gameEvents.filter(game.game_id=request.game_id)
-        name = gameEvent.game.name
-        date = gameEvent.game_date
-        time = gameEvent.game_time
-        players = gameEvent.players
+class game_event(View):
+    def get(self, request,*args, **kwargs):
+        gameEvents = GameEvent.objects.get(id=kwargs['game_event_id'])
+        players = []
+        for player in gameEvents.players.all():
+            players.append(player.username)
         context = {
-            'name' : name,
-            'date' : date,
-            'time' : time,
+            'game' : gameEvents.game.name,
+            'date' : gameEvents.game_date,
+            'time' : gameEvents.game_time,
             'players' : players
         }
-        return render(request, 'gameEvent/{}/gameEvent_info.html'.format(request.game_id), context) # temporary html file name
+        return JsonResponse(context, content_type="application/json", safe=False)
 
 # game events of user
 class user_game_event(TemplateView):
@@ -159,8 +189,15 @@ class game_stats(View):
 
 class user_stats(TemplateView):
     # @method_decorator(login_required)
-    def get(self, request):
-        user = User.objects.filter(id=request.user_id)
-        name = user.name
-        game_list = user.game_list
-        pass
+    def get(self, request, *args, **kwargs):
+        user = User.objects.get(id=kwargs['user_id'])
+        games_attended = GameEvent.objects.filter(players=user).count()
+
+        games_counter = user.game_list.all().count()
+
+        context = {
+            'num_of_games' : games_counter,
+            'games_attended' : games_attended
+        }
+
+        return JsonResponse(context, content_type="application/json", safe=False)

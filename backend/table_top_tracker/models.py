@@ -11,6 +11,9 @@ class GameObject(models.Model):
     description = models.TextField()
     quantity = models.PositiveSmallIntegerField()
 
+    def __str__(self):
+        return self.name
+
 # Represents the games
 # Example 
 # name = settlers of catan
@@ -20,6 +23,8 @@ class Game(models.Model):
     name = models.CharField(max_length=30)
     game_objects = models.ManyToManyField(GameObject, blank=True)
     times_played = models.PositiveIntegerField() 
+
+
 
 # Represents the User
 # Example 
@@ -40,7 +45,6 @@ class User(models.Model):
 # players = TableTopPlayer, 2ndPlayer, etc
 # game = Settler of Catan
 class GameEvent(models.Model):
-    id= models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     game_date = models.DateField()
     game_time = models.TimeField()
     players = models.ManyToManyField(User)

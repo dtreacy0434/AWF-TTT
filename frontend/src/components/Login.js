@@ -1,7 +1,7 @@
 import React from "react";
 import { Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../routes/Profile.js'
+import '../routes/profile.js'
 
 const Login = () => (
     <Card className="text-center" style={{ width: '80rem'}}>

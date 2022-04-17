@@ -1,5 +1,5 @@
-import Navigation from "../components/layout/Navigation"
-import GameCard from "../components/Gamecard"
+import Navigation from "../components/layout/navigation"
+import GameCard from "../components/gamecard"
 import styled from 'styled-components';
 import placeholder from '../images/placeholder.png';
 

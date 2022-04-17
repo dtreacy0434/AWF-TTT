@@ -1,5 +1,5 @@
-import Navigation from "../components/layout/Navigation"
-import ProfileCard from "../components/ProfileCard"
+import Navigation from "../components/layout/navigation"
+import ProfileCard from "../components/profileCard"
 import Login from "../components/Login";
 import styled from 'styled-components';
 import placeholder from '../images/placeholder.png';
