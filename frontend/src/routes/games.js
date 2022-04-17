@@ -2,6 +2,9 @@ import Navigation from "../components/layout/Navigation"
 import GameCard from "../components/Gamecard"
 import styled from 'styled-components';
 import placeholder from '../images/placeholder.png';
+import axios from 'axios';
+import { useState, useEffect } from "react";
+
 
 // /api/game/stats/
 // GET - return list of stats for all games
@@ -20,23 +23,47 @@ const StyledContainerChild = styled.div`
   margin-right: 100px;
 `;
 
+const StyledDiv = styled.div`
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  background-color: #E1E2EF;
+`;
+
+
 export default function Games() {
-    return (
-      <div>
-        <Navigation />
-        <StyledContainer>
-          <StyledContainerChild>
-            <GameCard
+  const [ gameList, setGameList ] = useState([]);
+  
+  // GET ALL GAMES
+  useEffect(async () => {
+    const result = await axios(
+      'https://fast-coast-09211.herokuapp.com/api/game/'
+    );
+
+    setGameList(result.data.games);
+  });
+
+  return (
+    <div>
+      <Navigation />
+
+      <StyledDiv>
+        <h3>Welcome to the Games page!</h3>
+      </StyledDiv>
+
+      <StyledContainer>
+        <StyledContainerChild>
+          {gameList.map((x) => 
+            <GameCard key={x.id}
               image={placeholder}
-              gameTitle={"Title"}
+              gameTitle={x.name}
               gameDesc={"Description"}
-              gamePieces={"Pieces"}
               width={'20rem'}
-              numOwners={'5'}
-              timesPlayed={'2'}
             />
-          </StyledContainerChild>
-        </StyledContainer>
-      </div>
-    )
+
+          )}
+        </StyledContainerChild>
+      </StyledContainer>
+    </div>
+  )
 }

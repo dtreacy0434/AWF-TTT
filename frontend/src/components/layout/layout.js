@@ -1,5 +1,4 @@
 import React from "react";
-import Footer from "./Footer";
 import styled from 'styled-components';
 
 class Layout extends React.Component {
@@ -7,7 +6,6 @@ class Layout extends React.Component {
         return(
             <StyledContainer>
                 <main>{this.props.children}</main>
-                <Footer />
             </StyledContainer>
         );
     };

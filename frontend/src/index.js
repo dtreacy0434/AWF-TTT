@@ -10,7 +10,6 @@ import {
 import Layout from "./components/layout/Layout";
 import Home from "./routes/Home";
 import Games from './routes/Games';
-import Places from './routes/Places';
 import Schedule from './routes/Schedule';
 import Profile from './routes/Profile';
 
@@ -21,7 +20,6 @@ ReactDOM.render(
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="games" element={<Games />} />
-        <Route path="places" element={<Places />} />
         <Route path="schedule" element={<Schedule />} />
         <Route path="profile" element={<Profile />} />
       </Routes>

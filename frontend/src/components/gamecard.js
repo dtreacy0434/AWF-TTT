@@ -7,7 +7,19 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // POST - add to list of all games & pieces
 // PUT - update name / game pieces of game in list
 
-const GameCard = ({ image, gameTitle, gameDesc, gamePieces, numOwners, width, timesPlayed }) => (
+function LoadMoreInfo() {
+    console.log("LOAD MORE");
+}
+
+function AddToCollection() {
+    console.log("ADD TO COLLECTION");
+}
+
+function UpdateGame() {
+    console.log("Update Game");
+}
+
+const GameCard = ({ image, gameTitle, gameDesc, width }) => (
     <Card className="text-center" style={{ width: width, padding: '5px', marginRight: '1rem' }}>
         <Card.Img variant="top" src={image}/>
         <Card.Header><Card.Title>{gameTitle}</Card.Title></Card.Header>
@@ -15,18 +27,13 @@ const GameCard = ({ image, gameTitle, gameDesc, gamePieces, numOwners, width, ti
             <Card.Text>
                 {gameDesc}
             </Card.Text>
-            <Card.Text>
-                {gamePieces}
-            </Card.Text>
-            <Card.Text>
-                Times Played: {timesPlayed}
-            </Card.Text>
         </Card.Body>
         <div className="btn-group" role="group">
-            <Button type="button" className="btn btn-outline-light btn-secondary">Add to Collection</Button>
-            <Button type="button" className="btn btn-outline-light btn-secondary">Update</Button>
+            <Button type="button" onClick={LoadMoreInfo} className="btn btn-outline-light btn-secondary">More Info</Button>
+            <Button type="button" onClick={AddToCollection} className="btn btn-outline-light btn-secondary">Add to Collection</Button>
+            <Button type="button" onClick={UpdateGame} className="btn btn-outline-light btn-secondary">Update</Button>
         </div>
-        <Card.Footer>Number of people that own this: {numOwners}</Card.Footer>
+        <Card.Footer></Card.Footer>
     </Card>
 )
 
