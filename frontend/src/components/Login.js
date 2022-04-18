@@ -1,9 +1,7 @@
 import React, { Component } from "react";
-import { Card, Form, Button } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '../routes/Profile.js'
-import axios from 'axios';
-import { useState, useEffect } from "react";
+import { Card } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "../routes/Profile.js";
 
 function Submit() {
     
@@ -13,7 +11,7 @@ export default class Login extends Component {
     
     render() {
         return (
-            <Card className="text-center" style={{ padding: '5px', marginRight: '1rem' }}>
+            <Card className="text-center" style={{ padding: "5px", marginRight: "1rem" }}>
                 <Card.Body>
                     <form>
                         <div className="form-group">

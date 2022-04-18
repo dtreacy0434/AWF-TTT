@@ -1,4 +1,4 @@
-import { Navbar, Container, Nav } from 'react-bootstrap';
+import { Navbar, Container, Nav } from "react-bootstrap";
 import logo from "../../images/logo.png";
 
 const Navigation = () => {
@@ -11,6 +11,7 @@ const Navigation = () => {
                 <Nav className="me-auto">
                     <Nav.Link href="/games">Games</Nav.Link>
                     <Nav.Link href="/schedule">Schedule</Nav.Link>
+                    <Nav.Link href="/people">People</Nav.Link>
                     <Nav.Link href="/profile">Profile</Nav.Link>
                 </Nav>
                 </Navbar.Collapse>

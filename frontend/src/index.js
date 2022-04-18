@@ -9,9 +9,10 @@ import {
 
 import Layout from "./components/layout/Layout";
 import Home from "./routes/Home";
-import Games from './routes/Games';
-import Schedule from './routes/Schedule';
-import Profile from './routes/Profile';
+import Games from "./routes/Games";
+import Schedule from "./routes/Schedule";
+import People from "./routes/People";
+import Profile from "./routes/Profile";
 
 
 ReactDOM.render(
@@ -21,6 +22,7 @@ ReactDOM.render(
         <Route path="/" element={<Home />} />
         <Route path="games" element={<Games />} />
         <Route path="schedule" element={<Schedule />} />
+        <Route path="people" element={<People/>} />
         <Route path="profile" element={<Profile />} />
       </Routes>
     </BrowserRouter>,

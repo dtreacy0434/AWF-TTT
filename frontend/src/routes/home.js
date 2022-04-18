@@ -1,7 +1,7 @@
 import Navigation from "../components/layout/Navigation"
-import styled from 'styled-components';
+import styled from "styled-components";
 import { Card } from "react-bootstrap";
-import image from '../images/playinggame.jpg';
+import image from "../images/playinggame.jpg";
 
 const StyledContainer = styled.div`
   padding: 20px;
@@ -18,7 +18,7 @@ export default function Home() {
         </StyledContainer>
         
         <StyledContainer>
-          <Card className="text-center" style={{ width: '40rem'}}>
+          <Card className="text-center" style={{ width: "40rem"}}>
             <Card.Header/>
             <Card.Body>
               <Card.Text>
@@ -29,7 +29,7 @@ export default function Home() {
             <Card.Footer/>
           </Card>
 
-          <Card className="text-center" style={{ width: '40rem'}}>
+          <Card className="text-center" style={{ width: "40rem"}}>
             <Card.Header/>
             <Card.Img variant="top" src={image}/>
             <Card.Footer/>

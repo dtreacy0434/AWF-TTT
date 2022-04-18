@@ -1,19 +1,11 @@
 import Navigation from "../components/layout/Navigation"
 import ProfileCard from "../components/ProfileCard"
 import Login from "../components/Login";
-import styled from 'styled-components';
-import placeholder from '../images/placeholder.png';
+import styled from "styled-components";
+import placeholder from "../images/placeholder.png";
 import CollectionCard from "../components/CollectionCard";
-import axios from 'axios';
+import axios from "axios";
 import { useState, useEffect } from "react";
-
-// /api/game/user/
-// GET - list of games owned by user
-// POST - add to users owned games list
-// DELETE - remove game from owned games list
-
-// /api/game/user/stats/
-// GET - return list of stats for games a user owns
 
 const StyledContainer = styled.div`
   display: flex;
@@ -57,11 +49,11 @@ export default function Profile() {
   // GET ALL USER INFO
   useEffect(async () => {
     const result = await axios(
-      'https://fast-coast-09211.herokuapp.com/api/user/'
+      "https://fast-coast-09211.herokuapp.com/api/user/"
     );
     
     setUserList(result.data.users);
-  });
+  }, []);
 
   // IF currentUser grab the ID
   userList.map((x) => {
@@ -90,8 +82,6 @@ export default function Profile() {
       
       setNumGames(result.data.num_of_games);
       setAttGames(result.data.games_attended);
-
-      console.log(userNumGames, userAttGames);
     }
   }, [userID]);
 
@@ -122,17 +112,12 @@ export default function Profile() {
           {
             userGameList.length === 0 && <p> You have no games...</p> 
           }
-          {userGameList.map((x) => 
-            <CollectionCard
-            image={placeholder}
-            gameTitle={"Example Game 1"}
-            gameDesc={"This is the description for a simple game 1"}
-            gamePieces={"Pieces include: " 
-              + "1 Game Board, "
-              + "4 Player Tokens"}
-            width={"20rem"}
-            timesPlayed={"2"}
-            numOwners={"14"}
+          {userGameList.map((x, index) => 
+            <CollectionCard key={index}
+              id={x.id}
+              gameTitle={x.name}
+              gameDesc={"Description"}
+              width={"20rem"}
             />
           )}
         </GameCardParent>

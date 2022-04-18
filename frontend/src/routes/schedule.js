@@ -1,14 +1,8 @@
-import Navigation from "../components/layout/Navigation"
-import styled from 'styled-components';
-import { useState } from "react";
-import ReactDatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { Card, ListGroup } from "react-bootstrap";
-import { format } from "date-fns";
-
-// /api/gameEvent/user/params={month, year}
-// GET - return list of planned game nights for user
-// + games that will be played for that month & year
+import Navigation from "../components/layout/Navigation";
+import { Card, ListGroup, Form, Button } from "react-bootstrap";
+import { useState, useEffect } from "react";
+import styled from "styled-components";
+import axios from "axios";
 
 const StyledDiv = styled.div`
   border-style: dotted;
@@ -23,77 +17,108 @@ const StyledContainer = styled.div`
   justify-content: space-evenly;
 `;
 
-const StyledDatePickContainer = styled.div`
-  display: flex;
-  padding-top: 50px;
-  padding-left: 50px;
-  background-color: #E1E2EF;
-`;
-
 const StyledContainerChild = styled.div`
   padding: 30px;
 `;
 
-function HandleChange(date, savedDates, setDates) {
-  let setUpMeeting = false;
+async function AddNewEvent() {
+  await axios({
+    headers: {"content-type": "application/json"},
+    method: "post",
+    url: `https://fast-coast-09211.herokuapp.com/api/gameEvent/`,
+    data: {
+      "game_date": "2022-04-18",
+      "game_time": "13:00:00",
+      "players": [2, 3],
+      "game": 1
+    }
+  })
+}
 
-  // Popup thing asking user if they want to set up a
-  // meeting for the selected date.. if yes:
-  setUpMeeting = true;
+async function DeleteEvent() {
+  const game_event_id = 5; // Game ID
 
-  if(setUpMeeting) {
-    // Sort Dates to make sure earliest are first
-    // Save the Date
-    const sortedDates = savedDates.concat(date).sort((a, b) => a - b)
-    setDates(sortedDates);
-  }
+  await axios({
+      headers: {"content-type": "application/json"},
+      method: "delete",
+      url: `https://fast-coast-09211.herokuapp.com/api/game/${game_event_id}`
+  });
 }
 
 export default function Schedule() {
-  const [gameDate, setDate] = useState(new Date());
   const [savedDates, setDates] = useState([]);
+  
+  // GET ALL Events
+  useEffect(async () => {
+    const result = await axios(
+      "https://fast-coast-09211.herokuapp.com/api/gameEvent/"
+    );
+    
+    // TODO: SORT in order of date 
+    setDates(result.data.game_events);
+  }, []);
 
   return (
     <StyledDiv>
       <Navigation/>
 
-      <StyledDatePickContainer>
-        <ReactDatePicker
-            selected={gameDate}
-            onChange={(date) => HandleChange(date, savedDates, setDates, setDate(date))}
-            withPortal
-            portalId="root-portal"
-            showTimeSelect
-          />
-      </StyledDatePickContainer>
+      <Button onClick={DeleteEvent}>Delete Event</Button>
+
+      <StyledContainer>
+        <Card style={{ width: "20rem", height: "32rem", marginRight: "1rem"}}>
+            <Card.Header/>
+            <Card.Body>
+                <Card.Title>Add New Event</Card.Title>
+                <Form onSubmit={AddNewEvent}>
+                  <Form.Group>
+                    <Form.Label>Game Date</Form.Label>
+                    <Form.Control type="date" />
+                    <br/>
+                    <Form.Label>Game Time</Form.Label>
+                    <Form.Control type="time" />
+                    <br/>
+                    <Form.Label>Players</Form.Label>
+                    <Form.Control type="text" placeholder="e.g. '2, 3'"/>
+                    <br/>
+                    <Form.Label>Game</Form.Label>
+                    <Form.Control type="text" placeholder="e.g. '1'"/>
+                    <br/>
+                    <Form.Control type="submit"/>
+                  </Form.Group>
+                </Form>
+            </Card.Body>
+            <Card.Footer/>
+          </Card>
+      </StyledContainer>
 
       <StyledContainer>
         <StyledContainerChild>
-          <Card style={{ width: '30rem'}}>
+          <Card style={{ width: "30rem"}}>
             <Card.Header>Up Next</Card.Header>
             <ListGroup variant="flush">
               {
-                savedDates[0] && <ListGroup.Item>{format(savedDates[0], 'MMMM dd, yyyy - h:mm aaa')}</ListGroup.Item>
-              }
-              {
-                savedDates[1] && <ListGroup.Item>{format(savedDates[1], 'MMMM dd, yyyy - h:mm aaa')}</ListGroup.Item>
-              }
-              {
                 savedDates.length === 0 && <ListGroup.Item>Nothing Upcoming!</ListGroup.Item> 
               }
+              {
+                savedDates[0] && <ListGroup.Item>{savedDates[0].players} players on {savedDates[0].game_data}</ListGroup.Item>
+              }
+              {
+                savedDates[1] && <ListGroup.Item>{savedDates[1].players} players on {savedDates[1].game_data}</ListGroup.Item>
+              }
+
             </ListGroup>
           </Card>
         </StyledContainerChild>
 
         <StyledContainerChild>
-          <Card style={{ width: '40rem'}}>
+          <Card style={{ width: "40rem"}}>
             <Card.Header>In the Future</Card.Header>
             <ListGroup variant="flush">
               {
                 savedDates.length === 0 && <ListGroup.Item>Nothing Upcoming!</ListGroup.Item> 
               }
-              {savedDates.map((x, index) => 
-                <ListGroup.Item key={index}>{format(x, 'MMMM dd, yyyy - h:mm aaa')}</ListGroup.Item>
+              {savedDates.map((x, index) =>
+                <ListGroup.Item key={index}>{x.players} players on {x.game_data}</ListGroup.Item>
               )}
             </ListGroup>
           </Card>
