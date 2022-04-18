@@ -118,7 +118,7 @@ export default function Schedule() {
                 savedDates.length === 0 && <ListGroup.Item>Nothing Upcoming!</ListGroup.Item> 
               }
               {savedDates.map((x, index) =>
-                <ListGroup.Item key={index}>{x.players} players on {x.game_data}</ListGroup.Item>
+                <ListGroup.Item key={index}>{x.game} - {x.players} players on {x.game_data}</ListGroup.Item>
               )}
             </ListGroup>
           </Card>

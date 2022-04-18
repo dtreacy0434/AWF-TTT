@@ -1,5 +1,5 @@
 import Navigation from "../components/layout/Navigation"
-import GameCard from "../components/Gamecard"
+import GameCard from "../components/GameCard"
 import styled from "styled-components";
 import placeholder from "../images/placeholder.png";
 import axios from "axios";

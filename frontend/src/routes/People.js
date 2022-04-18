@@ -26,6 +26,7 @@ const StyledContainerChild = styled.div`
 
 export default function People() {
     const [ userList, setUserList ] = useState([]);
+    const [ userStats, setStatsList] = useState([]);
     
     // GET ALL USER INFO
     useEffect(async () => {
@@ -35,6 +36,7 @@ export default function People() {
       
       setUserList(result.data.users);
     }, []);
+
 
     return (
         <div>

@@ -117,7 +117,8 @@ class all_game_event(View):
             g_e = {
                 "id" : gameEvent.id,
                 "game_data" : gameEvent.game_date,
-                "players" : gameEvent.players.count()
+                "players" : gameEvent.players.count(),
+                "game" : gameEvent.game.name,
             }
             gameevents_list.append(g_e)
 
@@ -169,8 +170,11 @@ class game_data(View):
         
         return JsonResponse(context, content_type="application/json")
 
-    def delete(self, request):
-        pass
+    def delete(self, request, *args, **kwargs):
+        game = Game.objects.get(id=kwargs["game_id"])
+        game.delete()
+
+        return JsonResponse("OK", content_type="application/json", safe=False)
 
 #This will show all the games the user has
 class user_game_data(View):
