@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { Navbar, Container, Nav } from 'react-bootstrap';
-=======
 import { Navbar, Container, Nav } from "react-bootstrap";
->>>>>>> origin/Faith-FrontEndStuff
 import logo from "../../images/logo.png";
 
 const Navigation = () => {
@@ -14,13 +10,8 @@ const Navigation = () => {
                 <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
                     <Nav.Link href="/games">Games</Nav.Link>
-<<<<<<< HEAD
-                    <Nav.Link href="/places">Places</Nav.Link>
-                    <Nav.Link href="/schedule">Schedule</Nav.Link>
-=======
                     <Nav.Link href="/schedule">Schedule</Nav.Link>
                     <Nav.Link href="/people">People</Nav.Link>
->>>>>>> origin/Faith-FrontEndStuff
                     <Nav.Link href="/profile">Profile</Nav.Link>
                 </Nav>
                 </Navbar.Collapse>
