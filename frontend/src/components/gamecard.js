@@ -4,10 +4,22 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-async function AddToCollection() {
-    console.log("ADD TO COLLECTION");
-    const game_id = 2; // Game ID
-    const user_id = 3;
+// FILE : GameCard.js
+// PROJECT : SENG3080 - Group Project
+// PROGRAMMERS : 
+// FIRST VERSION : 
+// DESCRIPTION :
+// This file contains the GameCard component, displays information about games
+
+/*
+* FUNCTION : AddToCollection()
+* DESCRIPTION :  This function will make the api call to add a 
+                game to a users collection
+* PARAMETERS : game_id - ID of game to add
+* RETURNS : N/A
+*/
+async function AddToCollection(game_id) {
+    const user_id = 3; //TODO: Get this from currently logged in user
 
     await axios({
         headers: {"content-type": "application/json"},
@@ -17,16 +29,29 @@ async function AddToCollection() {
     })
 }
 
-async function DeleteGame() {
-    const game_id = 5; // Game ID
-
+/*
+* FUNCTION : DeleteGame()
+* DESCRIPTION : This function will delete a game from the games list
+* PARAMETERS : id - Game ID
+* RETURNS : N/A
+*/
+async function DeleteGame(id) {
     await axios({
         headers: {'content-type': 'application/json'},
         method: 'delete',
-        url: `https://fast-coast-09211.herokuapp.com/api/game/${game_id}`
+        url: `https://fast-coast-09211.herokuapp.com/api/game/${id}`
     });
 }
 
+/*
+* FUNCTION : GamePopover
+* DESCRIPTION : This will display a small popover with moreinfo on a game
+* PARAMETERS : id - Game ID
+               gameTitle - Title of game
+               timesPlayed - Times the games been played
+               gameObjects - Objects the game owns
+* RETURNS : Display the popover
+*/
 const GamePopover = ({ id, gameTitle, timesPlayed, gameObjects }) => {
     return (
         <Popover id="popover-basic">
@@ -42,6 +67,17 @@ const GamePopover = ({ id, gameTitle, timesPlayed, gameObjects }) => {
     )
 }
 
+/*
+* FUNCTION : GameCard
+* DESCRIPTION : This will make the api calls to get game information and display
+                a Card component with that information
+* PARAMETERS : id - Game ID
+               image - Game Image
+               gameTitle - Game Title
+               gameDesc - Game Description
+               width - width of the card
+* RETURNS : Display Cards with game information
+*/
 const GameCard = ({ id, image, gameTitle, gameDesc, width }) => {
     const [ timesPlayed, setTimesPlayed ] = useState();
     const [ gameObjects, setGameObjects ] = useState([]);
@@ -65,7 +101,7 @@ const GameCard = ({ id, image, gameTitle, gameDesc, width }) => {
     }, [id]);
 
     return (
-        <Card className="text-center" style={{ width: width, padding: "5px", marginRight: "1rem" }}>
+        <Card className="text-center" style={{ width: width, padding: "5px", marginRight: "1rem", marginBottom: "1rem" }}>
             <Card.Img variant="right" src={image}/>
             <Card.Header><Card.Title>{gameTitle}</Card.Title></Card.Header>
             <Card.Body>
@@ -77,8 +113,8 @@ const GameCard = ({ id, image, gameTitle, gameDesc, width }) => {
                 <OverlayTrigger trigger="click" placement="top" overlay={GamePopover({id, gameTitle, timesPlayed, gameObjects})}>
                     <Button type="button" className="btn btn-outline-light btn-secondary">More Info</Button>
                 </OverlayTrigger>
-                <Button type="button" onClick={AddToCollection} className="btn btn-outline-light btn-success">Add to Collection</Button>
-                <Button type="button" onClick={DeleteGame} className="btn btn-outline-light btn-danger">Delete</Button>
+                <Button type="button" onClick={() => AddToCollection(id)} className="btn btn-outline-light btn-success">Add to Collection</Button>
+                <Button type="button" onClick={() => DeleteGame(id)} className="btn btn-outline-light btn-danger">Delete</Button>
             </div>
 
             <Card.Footer></Card.Footer>

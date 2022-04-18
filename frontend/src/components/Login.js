@@ -3,6 +3,22 @@ import { Card } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../routes/Profile.js";
 
+// FILE : Login.js
+// PROJECT : SENG3080 - Group Project
+// PROGRAMMERS : 
+// FIRST VERSION : 
+// DESCRIPTION :
+// The functions in this file are used to set
+// up the Login/Registration for the application
+
+//TODO: However much of this we wanna do?
+// Could also just skip the login stuff and just demo as a logged in user?
+/*
+* FUNCTION : Submit()
+* DESCRIPTION : Submitting form event handler
+* PARAMETERS : N/A
+* RETURNS : N/A
+*/
 function Submit() {
     
 }

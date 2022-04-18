@@ -7,6 +7,14 @@ import CollectionCard from "../components/CollectionCard";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
+// FILE : Profile.js
+// PROJECT : SENG3080 - Group Project
+// PROGRAMMERS : 
+// FIRST VERSION : 
+// DESCRIPTION :
+// The functions in this file are used to set
+// up the Profile related components for the application
+
 const StyledContainer = styled.div`
   display: flex;
   padding: 20px;
@@ -34,6 +42,14 @@ const GameCardParent = styled.div`
   justify-content: center;
 `;
 
+// TODO: Finish login stuff and connect whatever needs it in here
+
+/*
+* FUNCTION : Profile()
+* DESCRIPTION : This function Gets user info and displays it
+* PARAMETERS : N/A
+* RETURNS : Display of user info
+*/
 export default function Profile() {
   // These are to be controlled by Login
   let loggedIn = true;

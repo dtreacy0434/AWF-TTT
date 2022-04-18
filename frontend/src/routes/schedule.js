@@ -4,6 +4,14 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 
+// FILE : Schedule.js
+// PROJECT : SENG3080 - Group Project
+// PROGRAMMERS : 
+// FIRST VERSION : 
+// DESCRIPTION :
+// The functions in this file are used to create
+// and remove events for a user
+
 const StyledDiv = styled.div`
   border-style: dotted;
   border-width: 1px;
@@ -21,32 +29,59 @@ const StyledContainerChild = styled.div`
   padding: 30px;
 `;
 
-async function AddNewEvent() {
+//TODO: Get gameTime correctly (currently is in am/pm needs to be 24), and 
+// gamePlayers - ???
+/*
+* FUNCTION : AddNewEvent()
+* DESCRIPTION : This function makes the api call to add a new event
+* PARAMETERS : gameDate - Date of game
+               gameTime - Time of game
+               gamePlayers - Players joining
+               gameToPlay - Game to be played during event
+* RETURNS : N/A
+*/
+async function AddNewEvent(gameDate, gameTime, gamePlayers, gameToPlay) {
   await axios({
     headers: {"content-type": "application/json"},
     method: "post",
     url: `https://fast-coast-09211.herokuapp.com/api/gameEvent/`,
     data: {
-      "game_date": "2022-04-18",
+      "game_date": gameDate,
       "game_time": "13:00:00",
-      "players": [2, 3],
-      "game": 1
+      "players": [2,3],
+      "game": gameToPlay
     }
   })
 }
 
-async function DeleteEvent() {
-  const game_event_id = 5; // Game ID
-
+//TODO Get the id for this properly?
+/*
+* FUNCTION : DeleteEvent()
+* DESCRIPTION : This function makes the api call to delete an event
+* PARAMETERS : game_even
+* RETURNS :
+*/
+async function DeleteEvent(eventID) {
   await axios({
       headers: {"content-type": "application/json"},
       method: "delete",
-      url: `https://fast-coast-09211.herokuapp.com/api/game/${game_event_id}`
+      url: `https://fast-coast-09211.herokuapp.com//api/gameEvent/${eventID}`
   });
 }
 
+/*
+* FUNCTION : Schedule
+* DESCRIPTION : This makes the api call to get all events, and display them
+* PARAMETERS : N/A
+* RETURNS : Display of events, event creator
+*/
 export default function Schedule() {
   const [savedDates, setDates] = useState([]);
+
+  const [ gameDate, setGameDate ] = useState("");
+  const [ gameTime, setGameTime ] = useState("");
+  const [ gamePlayers, setGamePlayers ] = useState([]);
+  const [ gameToPlay, setGameToPlay ] = useState("");
   
   // GET ALL Events
   useEffect(async () => {
@@ -54,7 +89,7 @@ export default function Schedule() {
       "https://fast-coast-09211.herokuapp.com/api/gameEvent/"
     );
     
-    // TODO: SORT in order of date 
+    // TODO: SORT in order of date so "up next" works
     setDates(result.data.game_events);
   }, []);
 
@@ -62,26 +97,24 @@ export default function Schedule() {
     <StyledDiv>
       <Navigation/>
 
-      <Button onClick={DeleteEvent}>Delete Event</Button>
-
       <StyledContainer>
         <Card style={{ width: "20rem", height: "32rem", marginRight: "1rem"}}>
             <Card.Header/>
             <Card.Body>
                 <Card.Title>Add New Event</Card.Title>
-                <Form onSubmit={AddNewEvent}>
+                <Form onSubmit={() => AddNewEvent(gameDate, gameTime, gamePlayers, gameToPlay)}>
                   <Form.Group>
                     <Form.Label>Game Date</Form.Label>
-                    <Form.Control type="date" />
+                    <Form.Control onChange={e => setGameDate(e.target.value)} type="date" />
                     <br/>
                     <Form.Label>Game Time</Form.Label>
-                    <Form.Control type="time" />
+                    <Form.Control onChange={e => setGameTime(e.target.value)} type="time" />
                     <br/>
                     <Form.Label>Players</Form.Label>
-                    <Form.Control type="text" placeholder="e.g. '2, 3'"/>
+                    <Form.Control onChange={e => setGamePlayers(e.target.value)} type="text" placeholder="e.g. '2, 3'"/>
                     <br/>
                     <Form.Label>Game</Form.Label>
-                    <Form.Control type="text" placeholder="e.g. '1'"/>
+                    <Form.Control onChange={e => setGameToPlay(e.target.value)} type="text" placeholder="e.g. '1'"/>
                     <br/>
                     <Form.Control type="submit"/>
                   </Form.Group>
@@ -118,7 +151,7 @@ export default function Schedule() {
                 savedDates.length === 0 && <ListGroup.Item>Nothing Upcoming!</ListGroup.Item> 
               }
               {savedDates.map((x, index) =>
-                <ListGroup.Item key={index}>{x.game} - {x.players} players on {x.game_data}</ListGroup.Item>
+                <ListGroup.Item key={index}>{x.players} players on {x.game_data} <Button style={{ marginLeft: '15rem'}} onClick={() => DeleteEvent(x.id)}>Delete Event</Button></ListGroup.Item>
               )}
             </ListGroup>
           </Card>

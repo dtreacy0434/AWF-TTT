@@ -6,13 +6,21 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-
 import Layout from "./components/layout/Layout";
 import Home from "./routes/Home";
 import Games from "./routes/Games";
 import Schedule from "./routes/Schedule";
 import People from "./routes/People";
 import Profile from "./routes/Profile";
+
+
+// FILE : index.js
+// PROJECT : SENG3080 - Group Project
+// PROGRAMMERS : 
+// FIRST VERSION : 
+// DESCRIPTION :
+// The functions in this file are used to set
+// up the routes for the application
 
 
 ReactDOM.render(
