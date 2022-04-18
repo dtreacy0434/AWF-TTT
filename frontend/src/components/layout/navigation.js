@@ -1,6 +1,14 @@
 import { Navbar, Container, Nav } from "react-bootstrap";
 import logo from "../../images/logo.png";
 
+// FILE : GameCard.js
+// PROJECT : SENG3080 - Group Project
+// PROGRAMMERS : 
+// FIRST VERSION : 
+// DESCRIPTION :
+// This file contains the Navigation Component
+// It sets up a navbar for the application
+
 const Navigation = () => {
     return (
         <Navbar bg="light" fixed="top">

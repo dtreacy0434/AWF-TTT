@@ -5,6 +5,14 @@ import placeholder from "../images/placeholder.png";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
+// FILE : People.js
+// PROJECT : SENG3080 - Group Project
+// PROGRAMMERS : 
+// FIRST VERSION : 
+// DESCRIPTION :
+// The functions in this file are used to set
+// up the People (Users) related components for the application
+
 const StyledDiv = styled.div`
   padding: 20px;
   display: flex;
@@ -24,6 +32,14 @@ const StyledContainerChild = styled.div`
   margin-right: 150px;
 `;
 
+//TODO: Do we want this?
+// If so we need to get & add the owned games, and attended games
+/*
+* FUNCTION : People()
+* DESCRIPTION : This function makes the api call to get all users info and displays it
+* PARAMETERS : N/A
+* RETURNS : Display all users info
+*/
 export default function People() {
     const [ userList, setUserList ] = useState([]);
     
