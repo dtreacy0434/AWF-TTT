@@ -12,5 +12,6 @@ urlpatterns = [
     path('game/<int:game_id>/gameObjects/', views.game_game_objects.as_view()),
     path('gameEvent/<int:game_event_id>/', views.game_event.as_view()),
     path('game/<int:game_id>/stats/', views.game_stats.as_view()),
-    path('user/<int:user_id>/stats/', views.user_stats.as_view())
+    path('user/<int:user_id>/stats/', views.user_stats.as_view()),
+    path('user/login/', views.is_user.as_view())
 ]

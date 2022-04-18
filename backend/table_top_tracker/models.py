@@ -23,7 +23,10 @@ class Game(models.Model):
     name = models.CharField(max_length=30)
     game_objects = models.ManyToManyField(GameObject, blank=True)
     times_played = models.PositiveIntegerField() 
+    description = models.TextField(blank=True)
 
+    def __str__(self):
+        return self.name
 
 
 # Represents the User

@@ -1,6 +1,6 @@
 from telnetlib import STATUS
 from django.http import HttpResponse, JsonResponse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render
 from django.views import View
 from django.contrib.auth.decorators import login_required
@@ -26,7 +26,8 @@ class all_games(View):
         for game in games:
             g_o = {
                 "id" : game.id,
-                "name" : game.name
+                "name" : game.name,
+                "description" : game.description,
             }
             game_list.append(g_o)
             
@@ -39,14 +40,23 @@ class all_games(View):
     #add a new game to the list, will require the ids of any gameobject if they have any
     def post(self, request):
         r = json.loads(request.body.decode())
-        if r['game_object_id']:
-            game_object = GameObject.objects.get(id=r['game_object_id'])
-            Game.objects.create(name=r['name'], game_objects=game_object, times_played=0)
-        else:
-            Game.objects.create(name=r['name'], times_played=0)
-        
-        return JsonResponse(status=201)
     
+        Game.objects.create(name=r['name'], times_played=0)
+        
+        return JsonResponse("OK", status=201, safe=False)
+
+class is_user(View):
+    def post(self, request):
+        r = json.loads(request.body.decode())
+        try:
+            user = User.objects.get(username=r['username'])
+        except User.DoesNotExist:
+            return HttpResponseBadRequest()
+        
+        context = {
+            "id" : user.id
+        }
+        return JsonResponse(context,content_type="application/json")
 
 #This will display the name of all the players in the database
 class all_users(View):
@@ -91,6 +101,14 @@ class all_game_objects(View):
         }
         return JsonResponse(context, content_type="application/json")
 
+    #Creats a new game object
+    
+    def post(self, request):
+        r = json.loads(request.body.decode())
+        User.objects.create(name=r['name'], description=r['description'], quantity=r['quantity'])
+
+        return JsonResponse(status=201)
+
 class all_game_event(View):
     def get(self, request):
         gameEvents =  GameEvent.objects.all()
@@ -109,12 +127,31 @@ class all_game_event(View):
             
         return JsonResponse(context, content_type="application/json")
 
+    def post(self, request, *args, **kwargs):
+        r = json.loads(request.body.decode())
+        print(r)
+
+        g = GameEvent(game_date=r['game_date'], game_time=r['game_time'], game=Game.objects.get(id=r['game']))
+        g.save()
+        for user in r['players']:
+            u_id = User.objects.get(id=user)
+            g.players.add(u_id.id)
+
+        g.save()
+
+        return JsonResponse("Ok", status=201, safe=False)
+
 # single game event by event id
 class game_event(View):
     def get(self, request, *args, **kwargs):
         gameEvent = GameEvent.objects.get(id=kwargs['game_event_id'])
         print(gameEvent)
         return JsonResponse(gameEvent, content_type="application/json")
+
+    def post(self, request, *args, **kwargs):
+        pass
+
+        return JsonResponse("Ok", status=201, safe=False)
 
 class game_data(View):
     def get(self, request, *args, **kwargs):
@@ -126,10 +163,14 @@ class game_data(View):
         context = {
             "name" : game.name,
             "times_played" : game.times_played,
-            "game_objects" : game_objects
+            "game_objects" : game_objects,
+            "description" : game.description,
         }
         
         return JsonResponse(context, content_type="application/json")
+
+    def delete(self, request):
+        pass
 
 #This will show all the games the user has
 class user_game_data(View):
@@ -138,19 +179,45 @@ class user_game_data(View):
         user = User.objects.get(id=kwargs['user_id'])
         games = []
         for obj in user.game_list.all():
-            games.append(obj.name)
+            g_o = {
+                "id" : obj.id,
+                "name" : obj.name,
+            }
+            games.append(g_o)
+            
         context={
             'username' : user.username,
             'games' : games
         }
         return JsonResponse(context, content_type="application/json")
 
-    def post(self, request):
-        user = request.user
-#            user.game_list.add()
+    def post(self, request, *args, **kwargs):
+        user = User.objects.get(id=kwargs['user_id'])
+        r = json.loads(request.body.decode())
+        print(r)
+        try:
+            game_id = r['game_id']
+        except:
+            return JsonResponse("Bad Request", status=404, safe=False)
 
-    def delete(self, request):
-        pass
+        game = Game.objects.get(id=game_id)
+
+        user.game_list.add(game)
+
+        return JsonResponse("OK", status=201, safe=False)
+
+
+    def delete(self, request, *args, **kwargs):
+        user = User.objects.get(id=kwargs['user_id'])
+        r = json.loads(request.body.decode())
+        print(r)
+        game_id = r['game_id']
+
+        game = Game.objects.get(id=game_id)
+
+        user.game_list.remove(game)
+
+        return JsonResponse("OK", status=201, safe=False)
 
 class game_game_objects(View):
     def get(self, request, *args, **kwargs):
@@ -187,6 +254,11 @@ class game_event(View):
         }
         return JsonResponse(context, content_type="application/json")
 
+    def delete(self, request, *args, **kwargs):
+        gameevent = GameEvent.objects.get(id=kwargs["game_event_id"])
+        gameevent.delete()
+
+        return JsonResponse("OK", content_type="application/json", safe=False)
 # game events of user
 class user_game_event(TemplateView):
 # @method_decorator(login_required)
