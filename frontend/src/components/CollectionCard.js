@@ -19,7 +19,7 @@ import { useState, useEffect } from "react";
 * RETURNS : N/A
 */
 async function RemoveFromCollection(game_id) {
-    const user_id = 3; //TODO: Get this from currently logged in user
+    const user_id = 2;
 
     await axios({
         headers: {'content-type': 'application/json'},

@@ -41,20 +41,22 @@ const StyledContainerChild = styled.div`
 * RETURNS : N/A
 */
 async function AddNewEvent(gameDate, gameTime, gamePlayers, gameToPlay) {
+  gamePlayers = gamePlayers.replace(/\s/g, "").split(",") 
+  console.log(gamePlayers);
   await axios({
     headers: {"content-type": "application/json"},
     method: "post",
     url: `https://fast-coast-09211.herokuapp.com/api/gameEvent/`,
     data: {
       "game_date": gameDate,
-      "game_time": "13:00:00",
-      "players": [2,3],
+      "game_time": gameTime,
+      "players": gamePlayers,
       "game": gameToPlay
     }
   })
 }
 
-//TODO Get the id for this properly?
+
 /*
 * FUNCTION : DeleteEvent()
 * DESCRIPTION : This function makes the api call to delete an event
@@ -65,8 +67,9 @@ async function DeleteEvent(eventID) {
   await axios({
       headers: {"content-type": "application/json"},
       method: "delete",
-      url: `https://fast-coast-09211.herokuapp.com//api/gameEvent/${eventID}`
+      url: `https://fast-coast-09211.herokuapp.com/api/gameEvent/${eventID}`
   });
+  window.location.reload(false);
 }
 
 /*
@@ -89,7 +92,6 @@ export default function Schedule() {
       "https://fast-coast-09211.herokuapp.com/api/gameEvent/"
     );
     
-    // TODO: SORT in order of date so "up next" works
     setDates(result.data.game_events);
   }, []);
 
@@ -114,7 +116,7 @@ export default function Schedule() {
                     <Form.Control onChange={e => setGamePlayers(e.target.value)} type="text" placeholder="e.g. '2, 3'"/>
                     <br/>
                     <Form.Label>Game</Form.Label>
-                    <Form.Control onChange={e => setGameToPlay(e.target.value)} type="text" placeholder="e.g. '1'"/>
+                    <Form.Control onChange={e => setGameToPlay(e.target.value)} type="text" placeholder="e.g. 'Mouse Trap'"/>
                     <br/>
                     <Form.Control type="submit"/>
                   </Form.Group>
@@ -133,10 +135,10 @@ export default function Schedule() {
                 savedDates.length === 0 && <ListGroup.Item>Nothing Upcoming!</ListGroup.Item> 
               }
               {
-                savedDates[0] && <ListGroup.Item>{savedDates[0].players} players on {savedDates[0].game_data}</ListGroup.Item>
+                savedDates[0] && <ListGroup.Item>{savedDates[0].players} players on {savedDates[0].game_data} time {savedDates[0].game_time}</ListGroup.Item>
               }
               {
-                savedDates[1] && <ListGroup.Item>{savedDates[1].players} players on {savedDates[1].game_data}</ListGroup.Item>
+                savedDates[1] && <ListGroup.Item>{savedDates[1].players} players on {savedDates[1].game_data} time {savedDates[1].game_time}</ListGroup.Item>
               }
 
             </ListGroup>
@@ -144,14 +146,14 @@ export default function Schedule() {
         </StyledContainerChild>
 
         <StyledContainerChild>
-          <Card style={{ width: "40rem"}}>
+          <Card style={{ width: "60rem"}}>
             <Card.Header>In the Future</Card.Header>
             <ListGroup variant="flush">
               {
                 savedDates.length === 0 && <ListGroup.Item>Nothing Upcoming!</ListGroup.Item> 
               }
               {savedDates.map((x, index) =>
-                <ListGroup.Item key={index}>{x.players} players on {x.game_data} <Button style={{ marginLeft: '15rem'}} onClick={() => DeleteEvent(x.id)}>Delete Event</Button></ListGroup.Item>
+                <ListGroup.Item key={index}>{x.game} - {x.players} players on {x.game_data} <Button onClick={() => DeleteEvent(x.id)}>Delete Event</Button></ListGroup.Item>
               )}
             </ListGroup>
           </Card>

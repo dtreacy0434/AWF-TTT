@@ -19,7 +19,7 @@ import { useState, useEffect } from "react";
 * RETURNS : N/A
 */
 async function AddToCollection(game_id) {
-    const user_id = 3; //TODO: Get this from currently logged in user
+    const user_id = 2; 
 
     await axios({
         headers: {"content-type": "application/json"},
@@ -41,6 +41,8 @@ async function DeleteGame(id) {
         method: 'delete',
         url: `https://fast-coast-09211.herokuapp.com/api/game/${id}`
     });
+
+    window.location.reload(false);
 }
 
 /*

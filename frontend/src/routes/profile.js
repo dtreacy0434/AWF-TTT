@@ -6,6 +6,8 @@ import placeholder from "../images/placeholder.png";
 import CollectionCard from "../components/CollectionCard";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import cookies from "../components/Login";
+import Cookies from 'universal-cookie';
 
 // FILE : Profile.js
 // PROJECT : SENG3080 - Group Project
@@ -50,11 +52,12 @@ const GameCardParent = styled.div`
 * PARAMETERS : N/A
 * RETURNS : Display of user info
 */
+
 export default function Profile() {
   // These are to be controlled by Login
-  let loggedIn = true;
-  let currentUser = "TestUser2";
-  let userID = null;
+  let loggedIn = true ;
+  let currentUser =  "TTTUser";
+  let userID = "2";
   let userBio = "This is a default Bio!";
 
   const [ userList, setUserList ] = useState([]);
@@ -101,7 +104,7 @@ export default function Profile() {
     }
   }, [userID]);
 
-  if (loggedIn === true) {
+  if (loggedIn === true || loggedIn === null) {
     return (
       <StyledDiv>
         <Navigation />
@@ -132,7 +135,7 @@ export default function Profile() {
             <CollectionCard key={index}
               id={x.id}
               gameTitle={x.name}
-              gameDesc={"Description"}
+              gameDesc={x.description}
               width={"20rem"}
             />
           )}

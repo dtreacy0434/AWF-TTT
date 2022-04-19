@@ -4,7 +4,6 @@ import styled from "styled-components";
 import placeholder from "../images/placeholder.png";
 import axios from "axios";
 import { useState, useEffect } from "react";
-
 // FILE : People.js
 // PROJECT : SENG3080 - Group Project
 // PROGRAMMERS : 
@@ -31,9 +30,6 @@ const StyledContainerChild = styled.div`
   padding: 20px;
   margin-right: 150px;
 `;
-
-//TODO: Do we want this?
-// If so we need to get & add the owned games, and attended games
 /*
 * FUNCTION : People()
 * DESCRIPTION : This function makes the api call to get all users info and displays it
@@ -53,7 +49,6 @@ export default function People() {
       setUserList(result.data.users);
     }, []);
 
-
     return (
         <div>
           <Navigation />
@@ -68,8 +63,8 @@ export default function People() {
                 <ProfileCard key={x.id}
                   profileImage={placeholder}
                   username={x.username}
-                  numGames={x.username + " owns # games"}
-                  attendedGames={x.username + " has attended # games"}
+                  numGames={x.username + ` owns ${x.game_count} games`}
+                  attendedGames={x.username + ` has attended ${x.game_attend} games`}
                 />
               )}
             </StyledContainerChild>

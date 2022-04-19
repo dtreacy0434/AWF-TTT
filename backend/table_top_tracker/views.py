@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 from django.core import serializers
+import datetime
 import json
 from .models import GameObject, Game, User, GameEvent
 
@@ -41,7 +42,7 @@ class all_games(View):
     def post(self, request):
         r = json.loads(request.body.decode())
     
-        Game.objects.create(name=r['name'], times_played=0)
+        Game.objects.create(name=r['name'], description=r['description'],times_played=0)
         
         return JsonResponse("OK", status=201, safe=False)
 
@@ -54,7 +55,8 @@ class is_user(View):
             return HttpResponseBadRequest()
         
         context = {
-            "id" : user.id
+            "id" : user.id,
+            "username" : user.username
         }
         return JsonResponse(context,content_type="application/json")
 
@@ -66,7 +68,9 @@ class all_users(View):
         for u in users:
             u_o = {
                 "id" : u.id,
-                "username" : u.username
+                "username" : u.username,
+                "game_attend" : GameEvent.objects.filter(players=u).count(),
+                "game_count" : u.game_list.all().count()
             }
 
             user_list.append(u_o)
@@ -111,12 +115,14 @@ class all_game_objects(View):
 
 class all_game_event(View):
     def get(self, request):
-        gameEvents =  GameEvent.objects.all()
+        now = datetime.datetime.now()
+        gameEvents =  GameEvent.objects.filter(game_date__gte=now).order_by('game_date')
         gameevents_list = []
         for gameEvent in gameEvents:
             g_e = {
                 "id" : gameEvent.id,
                 "game_data" : gameEvent.game_date,
+                "game_time" : gameEvent.game_time,
                 "players" : gameEvent.players.count(),
                 "game" : gameEvent.game.name,
             }
@@ -130,15 +136,15 @@ class all_game_event(View):
 
     def post(self, request, *args, **kwargs):
         r = json.loads(request.body.decode())
-        print(r)
-
-        g = GameEvent(game_date=r['game_date'], game_time=r['game_time'], game=Game.objects.get(id=r['game']))
+        game_id = Game.objects.get(name=r['game'])
+     
+        g = GameEvent(game_date=r['game_date'], game_time=r['game_time'], game=game_id)
         g.save()
+        
         for user in r['players']:
-            u_id = User.objects.get(id=user)
-            g.players.add(u_id.id)
+            u_id = User.objects.get(username=user)
+            g.players.add(u_id)
 
-        g.save()
 
         return JsonResponse("Ok", status=201, safe=False)
 
@@ -186,6 +192,7 @@ class user_game_data(View):
             g_o = {
                 "id" : obj.id,
                 "name" : obj.name,
+                "description" : obj.description,
             }
             games.append(g_o)
             
